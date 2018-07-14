@@ -1,3 +1,5 @@
+'use strict';
+
 const controller = {
     employee: require('./controllers/employee'),
     message: require('./controllers/message')
