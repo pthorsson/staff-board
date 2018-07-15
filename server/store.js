@@ -4,15 +4,26 @@ const fs = require('fs');
 const _ = require('lodash');
 const uuid = require('uuid/v1');
 
+// Store data.
 let storeData = {
     employees: [],
     messages: []
 };
 
+// Callbacks for subscriptions.
+let subscriptions = [];
+
 const store = {
 
+    // Path to database file.
     dbFile: null,
 
+    /**
+     * Initiates the store by reading or creating the database json
+     * and emitting the data.
+     *
+     * @param {string} dbFile Path to database file.
+     */
     init(dbFile) {
         store.dbFile = dbFile;
 
@@ -20,28 +31,71 @@ const store = {
             let dataJson = fs.readFileSync(store.dbFile, 'utf8');
 
             storeData = JSON.parse(dataJson);
+            store.emit();
         } catch(err) {
             saveData();
         }
     },
 
+    /**
+     * Executes subscription callbacks.
+     */
+    emit() {
+        _.forEach(subscriptions, cb => cb());
+    },
+
+    /**
+     *
+     *
+     * @param {function} cb Callback function.
+     */
+    subscribe(cb) {
+        if (typeof cb === 'function') {
+            subscriptions.push(cb);
+            cb();
+        }
+    },
+
     employee: {
 
-        get(id) {
+        /**
+         * Fetches employee data from the store data by employee id.
+         * 
+         * @param {string} id Employee id.
+         * 
+         * @return {Promise} 
+         */
+        get: (id) => new Promise((resolve, reject) => {
             let employee = findEmployee(id);
+            
+            if (employee) {
+                resolve(_.clone(employee));
+            } else {
+                reject('Employee not found');
+            }
+        }),
 
-            return employee ? _.clone(employee) : null;
-        },
-
-        getAll() {
-            return _.cloneDeep(storeData.employees);
-        },
-    
-        add(data, cb) {
+        /**
+         * Fetches employee data from the store data for all employees.
+         * 
+         * @return {Promise} 
+         */
+        getAll: () => new Promise((resolve, reject) => {
+            resolve(_.cloneDeep(storeData.employees))
+        }),
+        
+        /**
+         * Creates an employee.
+         * 
+         * @param {any} data Data containing first and last name of new employee.
+         * 
+         * @return {Promise} 
+         */
+        add: (data) => new Promise((resolve, reject) => {
             let id, employee = {};
 
-            if (findEmployee(`${data.firstName} ${data.lastName}`)) {
-                return cb('Employee already exists');
+            if (findEmployee(data.firstName + data.lastName)) {
+                return reject('Employee already exists');
             }
 
             while (!id || findEmployee(id)) {
@@ -55,33 +109,57 @@ const store = {
             storeData.employees.push(employee);
 
             saveData();
+            resolve(_.clone(employee));
+        }),
 
-            cb(null);
-        },
-
-        update(id, data) {
+        /**
+         * Updates employee data by employee id.
+         * 
+         * @param {string} id   Employee id.
+         * @param {any}    data New employee data.
+         * 
+         * @return {Promise} 
+         */
+        update: (id, data) => new Promise((resolve, reject) => {
             let employee = findEmployee(id);
 
-            if (!employee) return false;
+            if (!employee) {
+                return reject('Employee not found');
+            }
 
             employee.firstName = data.firstName || employee.firstName;
             employee.lastName  = data.lastName  || employee.lastName;
 
             saveData();
+            resolve(_.clone(employee));
+        }),
 
-            return true;
-        },
+        /**
+         * Removes an employee by id along with all the messages connected
+         * to the given employee.
+         * 
+         * @param {string} id Employee id.
+         * 
+         * @return {Promise} 
+         */
+        remove: (id) => new Promise((resolve, reject) => {
+            let employeeFound = false;
 
-        remove(id) {
             _.remove(storeData.employees, employee => {
-                if (employee.id === id || `${employee.firstName} ${employee.lastName}` === id) {
+                if (employee.id === id || employee.firstName + employee.lastName === id) {
                     _.remove(storeData.messages, message => message.employee === employee.id);
+                    employeeFound = true;
                     return true;
                 }
             });
-
-            saveData();
-        }
+            
+            if (employeeFound) {
+                saveData();
+                resolve();
+            } else {
+                reject('Not found');
+            }
+        }),
 
     },
 
@@ -101,10 +179,10 @@ const store = {
             let batchedMessages = [];
 
             _.forEach(storeData.employees, _employee => {
-                let employee = _.clone(employee),
+                let employee = _.clone(_employee),
                     messages = _.filter(storeData.message, { employee: employee.id });
 
-                if (message.length) {
+                if (messages.length) {
                     employee.messages = messages;
                     batchedMessages.push(employee);
                 }
@@ -136,21 +214,23 @@ const store = {
             cb(null);
         },
 
-        update(id, data) {
+        update(id, data, cb) {
             let message = _.find(storeData.messages, { id });
 
-            if (!message) return false;
+            if (!message) return cb('Message not found');
 
             employee.firstName = data.firstName || employee.firstName;
             employee.lastName  = data.lastName  || employee.lastName;
 
             saveData();
 
-            return true;
+            cb(null);
         },
 
         remove(id) {
             _.remove(storeData.messages, message => message.employee === id);
+
+            saveData();
         }
 
     }
@@ -162,13 +242,11 @@ const store = {
  * @param {*} id 
  */
 const findEmployee = (id) => {
-    let uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    let uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+        findById = employee => id === employee.id,
+        findByName = employee => id.replace('+', '').toLowerCase() === (employee.firstName + employee.lastName).toLowerCase();
 
-    if (uuidPattern.test(id)) {
-        return _.find(storeData.employees, employee => employee.id === id);
-    } else {
-        return _.find(storeData.employees, employee => `${employee.firstName} ${employee.lastName}` === id);
-    }
+    return _.find(storeData.employees, uuidPattern.test(id) ? findById : findByName);
 };
 
 /**
@@ -179,6 +257,7 @@ const saveData = () => {
 
     try {
         fs.writeFileSync(store.dbFile, fileData);
+        store.emit();
     } catch(err) {}
 };
 
