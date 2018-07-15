@@ -10,7 +10,7 @@ module.exports = {
         (req, res, next) => {
             store.employee
                 .get(req.params.eid)
-                .then(employee => res.status(200).json(employee), err => res.status(404).json(err));
+                .then(employee => res.status(200).json(employee), err => res.status(err.code).json(err.message));
         },
     ],
 
@@ -32,7 +32,7 @@ module.exports = {
 
             store.employee
                 .add(employee)
-                .then(employee => res.status(200).json(employee), err => res.status(400).json(err));
+                .then(employeeId => res.status(200).json(employeeId), err => res.status(err.code).json(err.message));
         },
     ],
 
@@ -40,7 +40,7 @@ module.exports = {
         (req, res, next) => {
             store.employee
                 .update(req.params.eid, req.body)
-                .then(employee => res.status(200).json(employee), err => res.status(404).json(err));
+                .then(() => res.status(200).json('OK'), err => res.status(err.code).json(err.message));
         },
     ],
 
@@ -50,7 +50,7 @@ module.exports = {
 
             store.employee
                 .remove(req.params.eid)
-                .then(() => res.status(200).json('OK'), err => res.status(404).json(err));
+                .then(() => res.status(200).json('OK'), err => res.status(err.code).json(err.message));
         
         },
     ],

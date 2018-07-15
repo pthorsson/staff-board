@@ -19,6 +19,7 @@ module.exports = app => {
     app.put('/api/message/:mid', controller.message.edit);
     app.get('/api/message/:mid', controller.message.get);
     app.get('/api/messages', controller.message.getAll);
+    app.get('/api/messages/batched', controller.message.getBatched);
     app.delete('/api/message/:mid', controller.message.delete);
 
     // ---- Catch bad API request ----

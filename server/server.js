@@ -10,7 +10,11 @@ const store = require('./store');
 store.init('../db.json');
 
 store.subscribe(() => {
-    console.log(JSON.stringify(store.message.getBatched()));
+    store.message
+        .getBatched()
+        .then(messages => {
+            // console.log(JSON.stringify(messages));
+        });
 });
 
 // Pre endpoint middleware
