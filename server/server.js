@@ -8,6 +8,7 @@ const store = require('./store');
 
 // Initiates store
 store.init('../db.json');
+store.cleanUp();
 
 store.subscribe(() => {
     store.message

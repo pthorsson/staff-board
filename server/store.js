@@ -4,6 +4,9 @@ const fs = require('fs');
 const _ = require('lodash');
 const uuid = require('uuid/v1');
 
+// Misc
+const datePattern = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+
 // Store data.
 let storeData = {
     employees: [],
@@ -54,6 +57,26 @@ const store = {
             subscriptions.push(cb);
             cb();
         }
+    },
+
+    /**
+     * Removed any expired messages.
+     */
+    cleanUp() {
+        _.remove(storeData.messages, message => {
+            let expiresAt, now;
+
+            if (!datePattern.test(message.expiresAt)) {
+                return true;
+            }
+
+            expiresAt = new Date(message.expiresAt);
+            now = new Date();
+
+            return expiresAt <= now;
+        });
+
+        saveData();
     },
 
     employee: {
@@ -229,7 +252,7 @@ const store = {
                 return reject({ code: 400, message: 'No employee with the given id' });
             }
 
-            if (typeof data.expiresAt !== 'undefined' && !/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-2])$/.test(data.expiresAt)) {
+            if (typeof data.expiresAt !== 'undefined' && !validateDate(data.expiresAt)) {
                 return reject({ code: 400, message: 'Invalid expiration date' });
             }
 
@@ -263,7 +286,7 @@ const store = {
                 return reject({ code: 404, message: 'Message not found' })
             }
 
-            if (typeof data.expiresAt !== 'undefined' && !/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-2])$/.test(data.expiresAt)) {
+            if (typeof data.expiresAt !== 'undefined' && !validateDate(data.expiresAt)) {
                 return reject({ code: 400, message: 'Invalid expiration date' });
             }
 
@@ -322,5 +345,14 @@ const saveData = () => {
         store.emit();
     } catch(err) {}
 };
+
+/**
+ * Validate a date string.
+ * 
+ * @param {*} date 
+ * 
+ * @return {boolean} If date is valid or not
+ */
+const validateDate = (date) => datePattern.test(date) && new Date(date);
 
 module.exports = store;
