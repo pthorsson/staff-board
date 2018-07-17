@@ -15,11 +15,7 @@ store.cleanUp();
 scheduler.scheduleJob('1 0 * * *', store.cleanUp);
 
 store.subscribe(() => {
-    store.message
-        .getBatched()
-        .then(messages => {
-            // console.log(JSON.stringify(messages));
-        });
+    let messages = store.message.getBatched();
 });
 
 // Pre endpoint middleware

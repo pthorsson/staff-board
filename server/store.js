@@ -60,6 +60,16 @@ const store = {
     },
 
     /**
+     * Resets store data to initial state and saves the data.
+     */
+    reset() {
+        storeData.employees.length = 0;
+        storeData.messages.length = 0;
+
+        saveData();
+    },
+
+    /**
      * Removed any expired messages.
      */
     cleanUp() {
@@ -86,39 +96,39 @@ const store = {
          * 
          * @param {string} id Employee id.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        get: (id) => new Promise((resolve, reject) => {
+        get(id) {
             let employee = findEmployee(id);
             
             if (employee) {
-                resolve(_.clone(employee));
+                return { code: 200, data: _.clone(employee) };
             } else {
-                reject({ code: 404, message: 'Employee not found' });
+                return { code: 404, data: 'Employee not found' };
             }
-        }),
+        },
 
         /**
          * Fetches employee data from the store data for all employees.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        getAll: () => new Promise((resolve, reject) => {
-            resolve(_.cloneDeep(storeData.employees));
-        }),
+        getAll() {
+            return { code: 200, data: _.cloneDeep(storeData.employees) };
+        },
         
         /**
          * Creates an employee.
          * 
          * @param {any} data Data containing first and last name of new employee.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        add: (data) => new Promise((resolve, reject) => {
+        add(data) {
             let id, employee = {};
 
             if (findEmployee(data.firstName + data.lastName)) {
-                return reject({ code: 400, message: 'Employee already exists' });
+                return { code: 400, data: 'Employee already exists' };
             }
 
             while (!id || findEmployee(id)) {
@@ -132,8 +142,9 @@ const store = {
             storeData.employees.push(employee);
 
             saveData();
-            resolve(employee.id);
-        }),
+
+            return { code: 200, data: employee.id };
+        },
 
         /**
          * Updates employee data by employee id.
@@ -141,21 +152,22 @@ const store = {
          * @param {string} id   Employee id.
          * @param {any}    data New employee data.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        update: (id, data) => new Promise((resolve, reject) => {
+        update(id, data) {
             let employee = findEmployee(id);
 
             if (!employee) {
-                return reject({ code: 404, message: 'Employee not found' });
+                return { code: 404, data: 'Employee not found' };
             }
 
             employee.firstName = data.firstName || employee.firstName;
             employee.lastName  = data.lastName  || employee.lastName;
 
             saveData();
-            resolve();
-        }),
+            
+            return { code: 400, data: 'OK' };
+        },
 
         /**
          * Removes an employee by id along with all the messages connected
@@ -163,9 +175,9 @@ const store = {
          * 
          * @param {string} id Employee id.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        remove: (id) => new Promise((resolve, reject) => {
+        remove(id) {
             let employeeFound = false;
 
             _.remove(storeData.employees, employee => {
@@ -178,11 +190,12 @@ const store = {
             
             if (employeeFound) {
                 saveData();
-                resolve();
+
+                return { code: 200, data: 'OK' };
             } else {
-                reject({ code: 404, message: 'Employee not found' });
+                return { code: 404, data: 'Employee not found' };
             }
-        }),
+        },
 
     },
 
@@ -193,33 +206,33 @@ const store = {
          * 
          * @param {string} id Message id.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        get: (id) => new Promise((resolve, reject) => {
+        get(id) {
             let message = _.find(storeData.messages, { id });
             
             if (message) {
-                resolve(_.clone(message));
+                return { code: 200, data: _.clone(message) };
             } else {
-                reject({ code: 404, message: 'Message not found' });
+                return { code: 404, data: 'Message not found' };
             }
-        }),
+        },
 
         /**
          * Fetches all messages from the store data.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        getAll: () => new Promise((resolve, reject) => {
-            resolve(_.cloneDeep(storeData.messages))
-        }),
+        getAll() {
+            return { code: 200, data: _.cloneDeep(storeData.messages) };
+        },
 
         /**
          * Fetches all messages batched together with the related employee.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        getBatched: () => new Promise((resolve, reject) => {
+        getBatched() {
             let batchedMessages = [];
 
             _.forEach(storeData.employees, _employee => {
@@ -232,8 +245,8 @@ const store = {
                 }
             });
 
-            resolve(batchedMessages);
-        }),
+            return { code: 200, data: batchedMessages };
+        },
 
         /**
          * Creates a message.
@@ -241,19 +254,19 @@ const store = {
          * @param {string} employeeId Employee id.
          * @param {any}    data       Message and expiration date.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        add: (data) => new Promise((resolve, reject) => {
+        add(data) {
             let id,
                 message = {},
                 employee = findEmployee(data.employee);
 
             if (!employee) {
-                return reject({ code: 400, message: 'No employee with the given id' });
+                return { code: 400, data: 'No employee with the given id' };
             }
 
             if (typeof data.expiresAt !== 'undefined' && !validateDate(data.expiresAt)) {
-                return reject({ code: 400, message: 'Invalid expiration date' });
+                return { code: 400, data: 'Invalid expiration date' };
             }
 
             while (!id || _.find(storeData.messages, { id })) {
@@ -268,8 +281,9 @@ const store = {
             storeData.messages.push(message);
 
             saveData();
-            resolve(message.id);
-        }),
+
+            return { code: 200, data: message.id };
+        },
 
         /**
          * Updates message data by message id.
@@ -277,43 +291,45 @@ const store = {
          * @param {string} id   Message id.
          * @param {any}    data New employee data.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        update: (id, data) => new Promise((resolve, reject) => {
+        update(id, data) {
             let message = _.find(storeData.messages, { id });
 
             if (!message) {
-                return reject({ code: 404, message: 'Message not found' })
+                return { code: 404, data: 'Message not found' };
             }
 
             if (typeof data.expiresAt !== 'undefined' && !validateDate(data.expiresAt)) {
-                return reject({ code: 400, message: 'Invalid expiration date' });
+                return { code: 400, data: 'Invalid expiration date' };
             }
 
             message.message   = data.message   || message.message;
             message.expiresAt = data.expiresAt || message.expiresAt;
 
             saveData();
-            resolve();
-        }),
+
+            return { code: 200, data: 'OK' };
+        },
 
         /**
          * Removes a message.
          * 
          * @param {string} id Message id.
          * 
-         * @returns {Promise} 
+         * @returns {any} Results: { code: number, data: any }
          */
-        remove: (id) => new Promise((resolve, reject) => {
+        remove(id) {
             if (!_.find(storeData.messages, { id })) {
-                return reject({ code: 404, message: 'Message not found' });
+                return { code: 404, data: 'Message not found' };
             }
 
             _.remove(storeData.messages, message => message.employee === id);
 
             saveData();
-            resolve();
-        }),
+            
+            return { code: 200, data: 'OK' };
+        },
 
     }
 
@@ -329,7 +345,7 @@ const store = {
 const findEmployee = (id) => {
     let uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
         findById = employee => id === employee.id,
-        findByName = employee => id.replace('+', '').toLowerCase() === (employee.firstName + employee.lastName).toLowerCase();
+        findByName = employee => typeof id === 'string' && id.replace('+', '').toLowerCase() === (employee.firstName + employee.lastName).toLowerCase();
 
     return _.find(storeData.employees, uuidPattern.test(id) ? findById : findByName);
 };
