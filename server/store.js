@@ -166,7 +166,7 @@ const store = {
 
             saveData();
             
-            return { code: 400, data: 'OK' };
+            return { code: 200, data: 'OK' };
         },
 
         /**
