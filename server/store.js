@@ -178,17 +178,12 @@ const store = {
          * @returns {any} Results: { code: number, data: any }
          */
         remove(id) {
-            let employeeFound = false;
+            let _employee = findEmployee(id);
 
-            _.remove(storeData.employees, employee => {
-                if (employee.id === id || employee.firstName + employee.lastName === id) {
-                    _.remove(storeData.messages, message => message.employee === employee.id);
-                    employeeFound = true;
-                    return true;
-                }
-            });
-            
-            if (employeeFound) {
+            if (_employee) {
+                _.remove(storeData.messages, message => message.employee === _employee.id);
+                _.remove(storeData.employees, employee => employee.id === _employee.id);
+
                 saveData();
 
                 return { code: 200, data: 'OK' };
@@ -345,7 +340,7 @@ const store = {
 const findEmployee = (id) => {
     let uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
         findById = employee => id === employee.id,
-        findByName = employee => typeof id === 'string' && id.replace('+', '').toLowerCase() === (employee.firstName + employee.lastName).toLowerCase();
+        findByName = employee => typeof id === 'string' && _.snakeCase(id) === _.snakeCase(`${employee.firstName} ${employee.lastName}`);
 
     return _.find(storeData.employees, uuidPattern.test(id) ? findById : findByName);
 };
