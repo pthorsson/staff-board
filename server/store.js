@@ -3,6 +3,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 const uuid = require('uuid/v1');
+const moment = require('moment');
 
 // Misc
 const datePattern = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
@@ -38,6 +39,8 @@ const store = {
         } catch(err) {
             saveData();
         }
+
+        return store;
     },
 
     /**
@@ -45,6 +48,8 @@ const store = {
      */
     emit() {
         _.forEach(subscriptions, cb => cb());
+
+        return store;
     },
 
     /**
@@ -57,6 +62,8 @@ const store = {
             subscriptions.push(cb);
             cb();
         }
+
+        return store;
     },
 
     /**
@@ -67,6 +74,8 @@ const store = {
         storeData.messages.length = 0;
 
         saveData();
+
+        return store;
     },
 
     /**
@@ -87,6 +96,8 @@ const store = {
         });
 
         saveData();
+
+        return store;
     },
 
     employee: {
@@ -364,6 +375,6 @@ const saveData = () => {
  * 
  * @return {boolean} If date is valid or not
  */
-const validateDate = (date) => datePattern.test(date) && new Date(date);
+const validateDate = (date) => datePattern.test(date) && moment(date).isValid() && moment(date).isSameOrAfter(moment());
 
 module.exports = store;
