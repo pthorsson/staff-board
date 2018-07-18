@@ -330,7 +330,7 @@ const store = {
                 return { code: 404, data: 'Message not found' };
             }
 
-            _.remove(storeData.messages, message => message.employee === id);
+            _.remove(storeData.messages, message => message.id === id);
 
             saveData();
             
