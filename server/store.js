@@ -271,7 +271,7 @@ const store = {
                 return { code: 400, data: 'No employee with the given id' };
             }
 
-            if (typeof data.expiresAt !== 'undefined' && !validateDate(data.expiresAt)) {
+            if (typeof data.expiresAt === 'undefined' || !validateDate(data.expiresAt)) {
                 return { code: 400, data: 'Invalid expiration date' };
             }
 

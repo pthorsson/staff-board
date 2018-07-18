@@ -202,11 +202,20 @@ it('Add messages', done => {
     });
 
     results = store.message.add({
+        employee: globals.eid1,
+        message: 'Message 5 by Oliver'
+    });
+    expect(results, 'Add message 5 with invalid date').to.containSubset({
+        code: 400,
+        data: 'Invalid expiration date'
+    });
+
+    results = store.message.add({
         employee: 'thisisnotanid',
-        message: 'Message 5 by Oliver',
+        message: 'Message 6 by Oliver',
         expiresAt: moment().add(1, 'days').format('YYYY-MM-DD')
     });
-    expect(results, 'Add message 5 with invalid employee').to.containSubset({
+    expect(results, 'Add message 6 with invalid employee').to.containSubset({
         code: 400,
         data: 'No employee with the given id'
     });
