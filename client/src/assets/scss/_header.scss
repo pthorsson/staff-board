@@ -1,0 +1,22 @@
+.header {
+    &__title {
+        background-color: #EEEEEE;
+        padding: 10px 30px;
+        font-size: 36px;
+        font-weight: bold;
+        margin: 0;
+    }
+    &__nav {
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px 30px;
+        background-color: #999;
+        & a {
+            padding-right: 30px;
+            color: white;
+        }
+        & a:hover {
+            color: #1468a0;
+        }
+    }
+}
