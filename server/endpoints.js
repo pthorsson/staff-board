@@ -2,19 +2,20 @@
 
 const controller = {
     employee: require('./controllers/employee'),
-    message: require('./controllers/message')
+    message: require('./controllers/message'),
+    docs: require('./controllers/docs')
 };
 
 module.exports = app => {
 
-    // ---- Employee ----
+    // ---- API - Employee ----
     app.post('/api/employee', controller.employee.create);
     app.put('/api/employee/:eid', controller.employee.edit);
     app.get('/api/employee/:eid', controller.employee.get);
     app.get('/api/employees', controller.employee.getAll);
     app.delete('/api/employee/:eid', controller.employee.delete);
 
-    // ---- Message ----
+    // ---- API - Message ----
     app.post('/api/message', controller.message.create);
     app.put('/api/message/:mid', controller.message.edit);
     app.get('/api/message/:mid', controller.message.get);
@@ -22,7 +23,15 @@ module.exports = app => {
     app.get('/api/messages/batched', controller.message.getBatched);
     app.delete('/api/message/:mid', controller.message.delete);
 
-    // ---- Catch bad API request ----
+    // ---- API - Catch bad request ----
     app.use('/api/*', (req, res) => res.status(400).json('Bad request'));
+
+
+    if (process.env.ENV !== 'prod') {
+
+        // ---- Docs page ----
+        app.get('/docs', controller.docs);
+
+    }
 
 };
