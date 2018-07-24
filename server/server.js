@@ -17,10 +17,10 @@ store.cleanUp();
 scheduler.scheduleJob('1 0 * * *', store.cleanUp);
 
 // Subscribes to store to emit changes to all sockets.
-store.subscribe(() => io.sockets.emit('messages', store.message.getBatched()));
+store.subscribe(() => io.sockets.emit('state', store.message.getBatched()));
 
 // Emits messages on socket connection
-io.on('connection', socket => socket.emit('messages', store.message.getBatched()));
+io.on('connection', socket => socket.emit('state', store.message.getBatched()));
 
 // Pre endpoint middleware
 app.use(compression());

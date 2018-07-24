@@ -84,18 +84,26 @@
             margin-top: -80px;
         }
 
-        header button {
+        header a {
             border: 2px solid white;
             background-color: transparent;
             color: white;
             padding: 6px 13px;
             font-weight: bold;
             cursor: pointer;
+            font-size: 13px;
+            display: inline-block;
         }
 
-        header button:hover {
+        header a.selected,
+        header a:hover {
             background-color: white;
+            text-decoration: none;
             color: #454545;
+        }
+
+        header a.selected {
+            pointer-events: none;
         }
 
         code {
@@ -194,43 +202,26 @@
             font-weight: bold;
         }
     </style>
-    <script>
-        function setPage(page) {
-            var views = document.getElementsByClassName('view');
-
-            for (var i = 0; i < views.length; i++) {
-                views[i].style.display = 'none';
-            }
-
-            document.getElementById(page).style.display = 'block';
-        }
-    </script>
 </head>
 
 <body>
     <header>
         <div class="container">
             <div style="float: right;">
-                <button onclick="setPage('api')">REST API</button>
-                <button onclick="setPage('socket')">Socket</button>
+                <a id="api" href="/docs/api">REST API</a>
+                <a id="socket" href="/docs/socket">Socket</a>
             </div>
+            <script>
+                document.getElementById('ACTIVE_PAGE').classList.add('selected');
+            </script>
             <div>
                 <h2>Staff board - Backend docs</h2>
             </div>
         </div>
     </header>
     <div class="container" style="padding: 90px 0 50px 0;">
-        <div id="api" class="view">
-            {{api}}
-        </div>
-
-        <div id="socket" class="view">
-            {{socket}}
-        </div>
+        PAGE_CONTENT
     </div>
-    <script>
-        setPage('api');
-    </script>
 </body>
 
 </html>

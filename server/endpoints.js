@@ -30,7 +30,7 @@ module.exports = app => {
     if (process.env.ENV !== 'prod') {
 
         // ---- Docs page ----
-        app.get('/docs', controller.docs);
+        app.get('/docs/:page?', controller.docs);
 
     }
 

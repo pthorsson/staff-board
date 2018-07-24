@@ -16,20 +16,26 @@ renderer.code = (code, language) => {
 marked.setOptions({ renderer });
 
 module.exports = (req, res, next) => {
+    let page = req.params.page;
+
+    if (!/^(api|socket)$/.test(page)) return res.redirect('/docs/api');
+
     fs.readFile('./docs/index.html', 'utf8', (err, data) => {
         if (err) return res.status(400).send(`Oops! Something went pretty darn wrong! :(<br><br><pre>${err.message}</pre>`);
 
-        let markdown = data.replace(/{{(.*?)}}/g, (match, fileName) => {
+        let markdown = data.replace('PAGE_CONTENT', (match, fileName) => {
             let fileData = null;
 
             try {
-                fileData = fs.readFileSync(`./docs/${fileName}.md`, 'utf8');
+                fileData = fs.readFileSync(`./docs/${page}.md`, 'utf8');
             } catch (error) {}
 
             if (!fileData) return '404';
 
             return marked(fileData);
         });
+
+        markdown = markdown.replace('ACTIVE_PAGE', page);
 
         res.send(markdown);
     });
