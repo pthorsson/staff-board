@@ -15,16 +15,18 @@ export default {
   name: 'employees',
   data: function () {
     return {
-      msg: null
+      testdata: null
     }
   },
   methods: {
     getEmployees: function () {
-      let ws = new WebSocket('ws://localhost:9000/api/employees', {
-        format: 'json'
-      })
-      console.log(ws)
+      // TODO: fix so we get the employeelist
+      return null
     }
+  },
+  created: function () {
+    // when component is created we fetch the data needed to view employees
+    this.getEmployees()
   },
   components: {
     Header

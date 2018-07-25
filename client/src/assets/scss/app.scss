@@ -1,1 +1,17 @@
 //generic applicatoin wide scss goes here
+@import 'settings.scss';
+
+button {
+    display: inline-block;
+    padding: 15px 30px;
+    font-weight: bold;
+    cursor: pointer;
+    &.primary {
+        background-color: $primary-action;
+        &:hover {
+            background-color: $primary-action-hover;
+        }
+    }
+}
+
+.mt-20 { margin-top: 20px; }
