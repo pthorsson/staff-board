@@ -23,10 +23,10 @@ module.exports = config => {
     }
 
     // Subscribes to store to emit changes to all sockets.
-    store.subscribe(() => io.sockets.emit('state', store.message.getBatched()));
+    store.subscribe(() => io.sockets.emit('state', store.message.getBatched().data));
 
     // Emits messages on socket connection
-    io.on('connection', socket => socket.emit('state', store.message.getBatched()));
+    io.on('connection', socket => socket.emit('state', store.message.getBatched().data));
 
     // Pre endpoint middleware
     app.use(compression());
