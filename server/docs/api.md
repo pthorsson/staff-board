@@ -25,15 +25,16 @@ eid: Employee ID
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: {
+code: 200,
+data: {
+    "id": String,
     "firstName": String,
     "lastName": String
 }
 
 // Error
-Code: 404
-Data: "Employee not found"
+code: 404
+data: "Employee not found"
 ```
 
 
@@ -43,8 +44,9 @@ Data: "Employee not found"
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: [{
+code: 200
+data: [{
+    "id": String,
     "firstName": String,
     "lastName": String
 }]
@@ -64,12 +66,12 @@ Data: [{
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: "<employeeId>"
+code: 200
+data: "<employeeId>"
 
 // Error
-Code: 400
-Data: "errorMessage"
+code: 400
+data: "errorMessage"
 ```
 
 
@@ -90,12 +92,12 @@ eid: Employee ID
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: "OK"
+code: 200
+data: "OK"
 
 // Error
-Code: 404
-Data: "Employee not found"
+code: 404
+data: "Employee not found"
 ```
 
 ### Remove employee
@@ -108,12 +110,12 @@ eid: Employee ID
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: "OK"
+code: 200
+data: "OK"
 
 // Error
-Code: 404
-Data: "Employee not found"
+code: 404
+data: "Employee not found"
 ```
 
 ### Get message
@@ -126,16 +128,17 @@ mid: Message ID
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: {
+code: 200
+data: {
+    "id": String,
     "employee": String,  // Employee ID
     "message": String,
     "expiresAt": String
 }
 
 // Error
-Code: 404
-Data: "Message not found"
+code: 404
+data: "Message not found"
 ```
 
 
@@ -145,8 +148,9 @@ Data: "Message not found"
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: [{
+code: 200
+data: [{
+    "id": String,
     "employee": String,  // Employee ID
     "message": String,
     "expiresAt": String
@@ -160,11 +164,13 @@ Data: [{
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: [{
+code: 200
+data: [{
+    "id": String,
     "firstName": String,
     "lastName": String,
     "messages": [{
+        "id": String,
         "employee": String,  // Employee ID
         "message": String,
         "expiresAt": String
@@ -187,12 +193,12 @@ Data: [{
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: "<messageId>"
+code: 200
+data: "<messageId>"
 
 // Error
-Code: 400
-Data: "errorMessage"
+code: 400
+data: "errorMessage"
 ```
 
 
@@ -214,15 +220,15 @@ mid: Message ID
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: "OK"
+code: 200
+data: "OK"
 
 // Error
-Code: 404
-Data: "Message not found"
+code: 404
+data: "Message not found"
 
-Code: 400
-Data: "errorMessage"
+code: 400
+data: "errorMessage"
 ```
 
 ### Remove message
@@ -235,10 +241,10 @@ mid: Message ID
 <sub>**RESPONSE:**</sub>
 ```js
 // Success
-Code: 200
-Data: "OK"
+code: 200
+data: "OK"
 
 // Error
-Code: 404
-Data: "Message not found"
+code: 404
+data: "Message not found"
 ```
