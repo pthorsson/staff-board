@@ -17,10 +17,10 @@ let storeData = {
 // Callbacks for subscriptions.
 let subscriptions = [];
 
-const store = {
+// Path to database file.
+let _dbFile;
 
-    // Path to database file.
-    dbFile: null,
+const store = {
 
     /**
      * Initiates the store by reading or creating the database json
@@ -29,10 +29,10 @@ const store = {
      * @param {string} dbFile Path to database file.
      */
     init(dbFile) {
-        store.dbFile = dbFile;
+        _dbFile = dbFile;
 
         try {
-            let dataJson = fs.readFileSync(store.dbFile, 'utf8');
+            let dataJson = fs.readFileSync(_dbFile, 'utf8');
 
             storeData = JSON.parse(dataJson);
             store.emit();
@@ -363,7 +363,7 @@ const saveData = () => {
     let fileData = JSON.stringify(storeData, null, 4);
 
     try {
-        fs.writeFileSync(store.dbFile, fileData);
+        fs.writeFileSync(_dbFile, fileData);
         store.emit();
     } catch(err) {}
 };

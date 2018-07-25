@@ -9,8 +9,6 @@ const io = require('socket.io')(server);
 const scheduler = require('node-schedule');
 const store = require('./store');
 
-let _server;
-
 module.exports = config => {
 
     // Initiates store
