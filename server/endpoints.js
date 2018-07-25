@@ -15,6 +15,10 @@ module.exports = app => {
     app.get('/api/employees', controller.employee.getAll);
     app.delete('/api/employee/:eid', controller.employee.delete);
 
+    if (process.env.ENV !== 'prod') {
+        app.delete('/api/employees/reset', controller.employee.reset);
+    }
+
     // ---- API - Message ----
     app.post('/api/message', controller.message.create);
     app.put('/api/message/:mid', controller.message.edit);

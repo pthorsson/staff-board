@@ -52,4 +52,12 @@ module.exports = {
         },
     ],
 
+    reset: [
+        (req, res, next) => {
+            store.reset();
+
+            res.status(200).json('OK');
+        }
+    ]
+
 };
