@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const server = require('http').Server(app);
 const bodyParser = require('body-parser');
@@ -29,6 +30,7 @@ module.exports = config => {
     // Pre endpoint middleware
     app.use(compression());
     app.use(bodyParser.json());
+    app.use(cors());
 
     // Set endpoints
     require('./endpoints')(app);
