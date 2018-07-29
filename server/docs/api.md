@@ -15,8 +15,10 @@ Here follows a simple documentation for the REST API.
 
 ---
 
-### Get employee
+### [Get employee](#get-employee)
 `GET /api/employee/:eid`
+
+*Fetches employee data by id or firstName+lastName as id. Example: `/api/employee/barry+allen`.*
 
 <sub>**PARAMETERS:**</sub>
 ```yml
@@ -38,8 +40,9 @@ data: "Employee not found"
 ```
 
 
-### Get all employees
+### [Get all employees](#get-all-employees)
 `GET /api/employees`
+
 
 <sub>**RESPONSE:**</sub>
 ```js
@@ -53,7 +56,7 @@ data: [{
 ```
 
 
-### Create employee
+### [Create employee](#create-employee)
 `POST /api/employee`
 
 <sub>**BODY:**</sub>
@@ -75,8 +78,10 @@ data: "errorMessage"
 ```
 
 
-### Update employee
+### [Update employee](#update-employee)
 `PUT /api/employee/:eid`
+
+*Updates employee data by id or firstName+lastName as id. Example: `/api/employee/barry+allen`.*
 
 <sub>**PARAMETERS:**</sub>
 ```yml
@@ -100,8 +105,10 @@ code: 404
 data: "Employee not found"
 ```
 
-### Remove employee
+### [Remove employee](#remove-employee)
 `DELETE /api/employee/:eid`
+
+*Removes employee data by id or firstName+lastName as id. Example: `/api/employee/barry+allen`.*
 
 <sub>**PARAMETERS:**</sub>
 ```yml
@@ -118,7 +125,8 @@ code: 404
 data: "Employee not found"
 ```
 
-### Get message
+
+### [Get message](#get-message)
 `GET /api/message/:mid`
 
 <sub>**PARAMETERS:**</sub>
@@ -142,7 +150,7 @@ data: "Message not found"
 ```
 
 
-### Get all messages
+### [Get all messages](#get-all-messages)
 `GET /api/messages`
 
 <sub>**RESPONSE:**</sub>
@@ -158,7 +166,7 @@ data: [{
 ```
 
 
-### Get batched messages 
+### [Get batched messages](#get-batched-messages)
 `GET /api/messages/batched`
 
 <sub>**RESPONSE:**</sub>
@@ -179,7 +187,7 @@ data: [{
 ```
 
 
-### Create message
+### [Create message](#create-message)
 `POST /api/message`
 
 <sub>**BODY:**</sub>
@@ -202,7 +210,7 @@ data: "errorMessage"
 ```
 
 
-### Update message
+### [Update message](#update-message)
 `PUT /api/message/:mid`
 
 <sub>**PARAMETERS:**</sub>
@@ -231,7 +239,7 @@ code: 400
 data: "errorMessage"
 ```
 
-### Remove message
+### [Remove message](#remove-message)
 `DELETE /api/message/:mid`
 
 <sub>**PARAMETERS:**</sub>
