@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -16,9 +17,14 @@ module.exports = config => {
     store.init(config.database);
     store.cleanUp();
 
+    // Preforms a store clean up 00:01 every day, removing all expired messages.
     if (config.scheduleCleanUp) {
-        // Preforms a store clean up 00:01 every day, removing all expired messages.
         scheduler.scheduleJob('1 0 * * *', store.cleanUp);
+    }
+
+    // Serves client dist folder as static root
+    if (config.serveClient) {
+        app.use(express.static(path.join(__dirname, '../client/dist')));
     }
 
     // Subscribes to store to emit changes to all sockets.
@@ -33,7 +39,7 @@ module.exports = config => {
     app.use(cors());
 
     // Set endpoints
-    require('./endpoints')(app);
+    require('./endpoints')(app, config);
 
     // Start app
     let port = config.port;

@@ -1,12 +1,15 @@
 'use strict';
 
+const path = require('path');
+const send = require('send');
+
 const controller = {
     employee: require('./controllers/employee'),
     message: require('./controllers/message'),
     docs: require('./controllers/docs')
 };
 
-module.exports = app => {
+module.exports = (app, config) => {
 
     // ---- API - Employee ----
     app.post('/api/employee', controller.employee.create);
@@ -31,11 +34,16 @@ module.exports = app => {
     app.use('/api/*', (req, res) => res.status(400).json('Bad request'));
 
 
+    // ---- Docs page ----
     if (process.env.ENV !== 'prod') {
-
-        // ---- Docs page ----
         app.get('/docs/:page?', controller.docs);
+    }
 
+    // ---- Client side ----
+    if (config.serveClient) {
+        app.get('/*', (req, res, next) => {
+            send(req, path.join(__dirname, '../client/dist/index.html')).pipe(res).on('error', next);
+        });
     }
 
 };

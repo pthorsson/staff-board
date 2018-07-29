@@ -5,5 +5,6 @@ const app = require('./app');
 app({
     database: '../db.json',
     port: 9000,
-    scheduleCleanUp: true
+    scheduleCleanUp: true,
+    serveClient: true
 });
