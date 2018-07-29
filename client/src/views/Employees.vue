@@ -20,7 +20,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="employee in employeeList">
+            <tr v-for="employee in employeeList" v-bind:key="employee.id">
               <td>{{employee.firstName}}</td>
               <td>{{employee.lastName}}</td>
               <td><button class="" v-on:click="showEditEmployee(employee)"><i class="fa fa-pen"></i></button></td>
@@ -40,7 +40,7 @@
 <script>
 // @ is an alias to /src
 import Header from '@/components/Header.vue'
-const baseURL = 'http://lvh.me:9000'
+const baseURL = 'http://localhost:9000'
 
 export default {
   name: 'employees',
@@ -62,59 +62,59 @@ export default {
       const url = baseURL + '/api/employees'
       this.axios.get(url).then((response) => {
         this.employeeList = response.data
-        console.log("Employees fetched")
+        console.log('Employees fetched')
       })
     },
     addEmployee: function () {
       const url = baseURL + '/api/employee'
       if (this.fName && this.lName) {
-        console.log("Name checks out, proceeding with save")
+        console.log('Name checks out, proceeding with save')
         const data = {'firstName': this.fName, 'lastName': this.lName}
         this.axios.post(url, data).then((response) => {
-          console.log("Saved successfully")
+          console.log('Saved successfully')
           this.getEmployees()
           this.employeeAddVisible = false
         })
       } else {
-        console.log("Error fill in the name please")
+        console.log('Error fill in the name please')
       }
     },
-    showEmployeeAdd: function() {
+    showEmployeeAdd: function () {
       this.employeeAddVisible = true
     },
-    removeEmployee: function(employeeID) {
+    removeEmployee: function (employeeID) {
       const url = baseURL + '/api/employee/' + employeeID
       if (employeeID && confirm('Are you sure?')) {
-        console.log("Attepting to remove: " + employeeID)
+        console.log('Attepting to remove: ' + employeeID)
         this.axios.delete(url).then((response) => {
-          console.log("Employee removed successfully")
+          console.log('Employee removed successfully')
           this.getEmployees()
         })
       }
     },
-    showEditEmployee: function(employee) {
+    showEditEmployee: function (employee) {
       this.editDialogVisible = true
       this.editedEmployee = employee
       this.editedFirstName = employee.firstName
       this.editedLastName = employee.lastName
     },
-    editEmployee: function() {
+    editEmployee: function () {
       let employee = this.editedEmployee
       const url = baseURL + '/api/employee/' + employee.id
       if (this.editedFirstName && this.editedLastName) {
         if (this.editedFirstName !== employee.firstName || this.editedLastName !== employee.lastName) {
           let data = {'firstName': this.editedFirstName, 'lastName': this.editedLastName}
-          console.log("Name seems updated, proceeding with employee edit")
+          console.log('Name seems updated, proceeding with employee edit')
           this.axios.put(url, data).then((response) => {
-            console.log("Employee successfully updated")
+            console.log('Employee successfully updated')
             this.getEmployees()
             this.editDialogVisible = false
           })
         } else {
-          console.log("Edited name is not updated")
+          console.log('Edited name is not updated')
         }
       } else {
-        console.log("Edited name is empty")
+        console.log('Edited name is empty')
       }
     }
   },
