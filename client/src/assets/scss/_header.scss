@@ -1,0 +1,25 @@
+@import 'settings.scss';
+
+.header {
+    &__title {
+        background-color: $clouds;
+        padding: 10px 30px;
+        font-size: 36px;
+        font-weight: bold;
+        margin: 0;
+        color: $midnight-blue;
+    }
+    &__nav {
+        font-size: 20px;
+        font-weight: bold;
+        padding: 10px 30px;
+        background-color: $midnight-blue;
+        & a {
+            padding-right: 30px;
+            color: $clouds;
+        }
+        & a:hover {
+            color: $primary-action;
+        }
+    }
+}
