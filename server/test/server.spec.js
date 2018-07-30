@@ -47,22 +47,16 @@ const test = {
         if (res.body.length !== count) throw new Error(`Result count mismatch: expected ${count}, received ${res.body.length}`);
     },
 
-    isEmployee: res => {
-        let props = ['id', 'firstName', 'lastName'];
+    matchingProps: type => res => {
+        let props = {
+            employee: ['id', 'firstName', 'lastName'],
+            message: ['id', 'employee', 'message', 'expiresAt']
+        };
 
         for (let key in res.body) {
-            if (!new RegExp(`^${props.join('|')}$`).test(key)) throw new Error('Employee properties mismatch');
+            if (props[type].indexOf(key) < 0) throw new Error(`Properties mismatch for type "${type}"`);
         }
     },
-
-    isMessage: res => {
-        let props = ['id', 'employee', 'message', 'expiresAt'];
-
-        for (let key in res.body) {
-            if (!new RegExp(`^${props.join('|')}$`).test(key)) throw new Error('Message properties mismatch');
-        }
-    },
-
 };
 
 //
@@ -79,10 +73,10 @@ describe('Create empolyees', () => {
 });
 
 describe('Get empolyee', () => {
-    it('Should get employee 1 by name', () => server.get('/api/employee/Barry+Allen').expect(200).expect(test.isEmployee));
-    it('Should get employee 3 by name', () => server.get('/api/employee/Bärrü+Ällëñ').expect(200).expect(test.isEmployee));
-    it('Should get employee 4 by name', () => server.get('/api/employee/O\'Barry+von+Allen').expect(200).expect(test.isEmployee));
-    it('Should get employee 1 by id', () => server.get(`/api/employee/${globals.employee[0]}`).expect(200).expect(test.isEmployee));
+    it('Should get employee 1 by name', () => server.get('/api/employee/Barry+Allen').expect(200).expect(test.matchingProps('employee')));
+    it('Should get employee 3 by name', () => server.get('/api/employee/Bärrü+Ällëñ').expect(200).expect(test.matchingProps('employee')));
+    it('Should get employee 4 by name', () => server.get('/api/employee/O\'Barry+von+Allen').expect(200).expect(test.matchingProps('employee')));
+    it('Should get employee 1 by id', () => server.get(`/api/employee/${globals.employee[0]}`).expect(200).expect(test.matchingProps('employee')));
     it('Should not find an employee', () => server.get('/api/employee/thisisnotanid').expect(404));
     it('Should get all employees', () => server.get('/api/employees').expect(200).expect(test.countIs(5)));
 });
@@ -114,7 +108,7 @@ describe('Create messages', () => {
 });
 
 describe('Get message', () => {
-    it('Should get message 1 by Barry', () => server.get(`/api/message/${globals.message[0]}`).expect(200).expect(test.isMessage));
+    it('Should get message 1 by Barry', () => server.get(`/api/message/${globals.message[0]}`).expect(200).expect(test.matchingProps('message')));
     it('Should not find a message', () => server.get('/api/message/thisisnotanid').expect(404));
     it('Should get all messages', () => server.get('/api/messages').expect(200).expect(test.countIs(4)));
     it('Should get batched messages', () => server.get('/api/messages/batched').expect(200).expect(res => {
