@@ -1,12 +1,9 @@
 const moment = require('moment');
 const chai = require('chai');
-const expect = chai.expect;
-const chaiSubset = require('chai-subset');
 const chaiAsPromised = require("chai-as-promised");
 const app = require('../app');
 const request = require('supertest');
 
-chai.use(chaiSubset);
 chai.use(chaiAsPromised);
 
 let server, _app,
