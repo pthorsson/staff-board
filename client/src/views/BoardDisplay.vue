@@ -35,15 +35,6 @@ export default {
       socketConnected: false
     }
   },
-  methods: {
-    getBoard: function () {
-      const url = baseURL + '/api/messages/batched'
-      this.axios.get(url).then((response) => {
-        this.messageBatch = response.data
-        console.log('Messages fetched')
-      })
-    }
-  },
   sockets: {
     connect (data) {
       this.socketConnected = true
@@ -57,10 +48,6 @@ export default {
     state (data) {
       this.messageBatch = data
     }
-  },
-  created: function () {
-    // when component is created we fetch the data needed to view the board
-    // this.getBoard()
   }
 }
 </script>
