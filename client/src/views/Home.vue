@@ -3,18 +3,24 @@
     <div>
       <Header />
       <div class="grid-container">
-        <div class="mt-20">
-          <button class="primary" v-on:click="showAddPost">Add post</button>
-          <div class="mt-20" v-show="addPostVisible">
-            <select v-model="newMessageSelectedEmployee">
+        <div class="board__addpost-wrapper">
+          <button class="primary" v-on:click="toggleAddPost">Add post</button>
+          <div class="board__addpost-dialog" v-show="addPostVisible">
+            <label>Name *</label>
+            <select v-model="newMessageSelectedEmployee" placeholder="Name">
               <option v-for="employee in employeeList" v-bind:key="employee.firstName" v-bind:value="employee.id">{{employee.firstName}} {{employee.lastName}}</option>
             </select>
-            <textarea v-model="newMessage" placeholder="Message text"></textarea>
-            <input v-model="newMessageExpire" type="text" placeholder="Expire date (YYYY-MM-DD)">
-            <button class="primary" v-on:click="addPost">Save</button>
+            <label>Message text *</label>
+            <textarea class="board__messagearea" v-model="newMessage" placeholder=""></textarea>
+            <label>Expire date (YYYY-MM-DD) *</label>
+            <input v-model="newMessageExpire" type="text" placeholder="YYYY-MM-DD">
+            <div class="text-right">
+              <button class="primary board__cancelbutton" v-on:click="hideAddPost">Cancel</button>
+              <button class="primary" v-on:click="addPost">Save</button>
+            </div>
           </div>
         </div>
-        <table class="mt-20">
+        <table class="board__table">
           <tr>
             <th>Name</th>
             <th>Message and expire date</th>
@@ -22,21 +28,24 @@
           <tr v-for="employee in messageBatch" v-bind:key="employee.id">
             <td>{{employee.firstName}} {{employee.lastName}}</td>
             <td>
-              <ul>
-                <li v-for="message in employee.messages" v-bind:key="message.id">
-                  <button v-on:click="removePost(message.id)"><i class="fa fa-trash"></i></button>
-                  <button v-on:click="showEditDialog(message)"><i class="fa fa-pen"></i></button>
-                  {{message.message}} - Expires: {{message.expiresAt}}</li>
-              </ul>
+              <div class="">
+                <div class="grid-x grid-margin-x" v-for="message in employee.messages" v-bind:key="message.id">
+                  <div class="cell auto"><span>{{message.message}}</span></div>
+                  <div class="cell shrink"><span>{{message.expiresAt}}</span></div>
+                  <div class="cell shrink"><button class="board__table-messagebutton" v-on:click="removePost(message.id)"><i class="fa fa-trash"></i></button></div>
+                  <div class="cell shrink"><button class="board__table-messagebutton" v-on:click="showEditDialog(message)"><i class="fa fa-pen"></i></button></div>
+                </div>
+              </div>
             </td>
           </tr>
         </table>
+        <div v-show="editDialogVisible" class="modal">
+          <textarea v-model="editedMessageText" placeholder="Message text"></textarea>
+          <input v-model="editedMessageExpire" type="text" placeholder="Expire date (YYYY-MM-DD)">
+          <button class="primary" v-on:click="editPost">Save</button>
+        </div>
       </div>
-      <div v-show="editDialogVisible" class="modal">
-        <textarea v-model="editedMessageText" placeholder="Message text"></textarea>
-        <input v-model="editedMessageExpire" type="text" placeholder="Expire date (YYYY-MM-DD)">
-        <button class="primary" v-on:click="editPost">Save</button>
-      </div>
+      
     </div>
   </div>
 </template>
@@ -77,8 +86,11 @@ export default {
         console.log('Messages fetched')
       })
     },
-    showAddPost: function () {
-      this.addPostVisible = true
+    toggleAddPost: function () {
+      this.addPostVisible = !this.addPostVisible
+    },
+    hideAddPost: function () {
+      this.addPostVisible = false
     },
     showEditDialog: function (message) {
       this.editDialogVisible = true
@@ -117,7 +129,7 @@ export default {
       }
     },
     editPost: function () {
-      let message = this.editedMessageObject 
+      let message = this.editedMessageObject
       const url = baseURL + '/api/message/' + message.id
       if (this.editedMessageText && this.editedMessageExpire) {
         if (this.editedMessageText !== message.message || this.editedMessageExpire !== message.expiresAt) {
@@ -146,3 +158,6 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  @import '@/assets/scss/_board.scss';
+</style>

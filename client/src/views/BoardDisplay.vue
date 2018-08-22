@@ -24,8 +24,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
-const baseURL = 'http://localhost:9000'
 
 export default {
   name: 'boardDisplay',

@@ -1,0 +1,55 @@
+@import 'settings.scss';
+
+.board {
+	&__addpost-wrapper {
+		margin-top: 20px;
+		text-align: right;
+		position: relative;
+	}
+	&__addpost-dialog {
+		text-align: left;
+		position: absolute;
+		right: 0;
+		width: 400px;
+		border: 1px solid $silver;
+		padding: 30px;
+		margin-top: 20px;
+		background-color: #FFF;
+	}
+	&__messagearea {
+		height: 150px;
+	}
+	&__cancelbutton {
+		margin-right: 20px;
+	}
+	&__table {
+		width: 100%;
+		margin-top: 20px;
+		border-collapse: collapse;
+
+		& th {
+			background-color: $concrete;
+			height: 40px;
+			text-align: left;
+			padding: 0 20px;
+		}
+		& td {
+			padding: 0  0  0 20px;
+
+			& ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+		}
+		& > tr:nth-child(2n+1) {
+			background-color: $clouds;
+		}
+		&-messagebutton {
+			padding: 15px 10px;
+		}
+	}
+	&__messagetable {
+		width: 100%;
+	}
+}
