@@ -7,24 +7,24 @@
         font-size: 36px;
         font-weight: bold;
         margin: 0;
-        color: $midnight-blue;
+        color: $dark-grey;
     }
     &__nav {
         font-size: 20px;
         font-weight: bold;
         padding: 10px 30px;
-        background-color: $midnight-blue;
+        background-color: $silver;
         & a {
             padding-right: 30px;
-            color: $clouds;
+            color: $dark-grey;
         }
         & a:hover {
-            color: $primary-action;
+            color: $dark-grey;
         }
     }
 }
 
 // vue router css
 .router-link-exact-active.router-link-active {
-    color: $primary-action;
+    color: $black;
 }
