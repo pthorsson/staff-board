@@ -1,24 +1,18 @@
 <template>
   <div class="home">
     <div>
-      <div class="grid-container">
         <table class="mt-20">
-          <tr>
-            <th>Name</th>
-            <th>Message and expire date</th>
-          </tr>
           <tr v-for="employee in messageBatch" v-bind:key="employee.id">
             <td>{{employee.firstName}} {{employee.lastName}}</td>
             <td>
-              <ul>
+              <ul class="boarddisplay__messagelist">
                 <li v-for="message in employee.messages" v-bind:key="message.id">
-                  {{message.message}} - Expires: {{message.expiresAt}}
+                  {{message.message}}
                 </li>
               </ul>
             </td>
           </tr>
         </table>
-      </div>
     </div>
   </div>
 </template>
@@ -49,3 +43,7 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  @import '@/assets/scss/_boarddisplay.scss';
+</style>
