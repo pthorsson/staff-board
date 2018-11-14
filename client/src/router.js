@@ -9,7 +9,7 @@ import VueSocketio from 'vue-socket.io'
 
 Vue.use(Router)
 Vue.use(VueAxios, axios)
-Vue.use(VueSocketio, 'http://localhost:9000')
+Vue.use(VueSocketio, '/')
 
 export default new Router({
   mode: 'history',

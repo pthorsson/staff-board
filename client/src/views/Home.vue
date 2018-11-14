@@ -53,7 +53,7 @@
 <script>
 // @ is an alias to /src
 import Header from '@/components/Header.vue'
-const baseURL = 'http://localhost:9000'
+const baseURL = ''
 
 export default {
   name: 'home',
