@@ -1,18 +1,18 @@
 <template>
   <div class="home">
     <div>
-        <table class="mt-20">
-          <tr v-for="employee in messageBatch" v-bind:key="employee.id">
-            <td>{{employee.firstName}} {{employee.lastName}}</td>
-            <td>
-              <ul class="boarddisplay__messagelist">
+        <div class="boarddisplay__container">
+          <div class="boarddisplay__item" v-for="employee in messageBatch" v-bind:key="employee.id">
+            <div class="boarddisplay__item-name">{{employee.firstName}} {{employee.lastName}}</div>
+            <div class="boarddisplay__item-content">
+              <ul>
                 <li v-for="message in employee.messages" v-bind:key="message.id">
                   {{message.message}}
                 </li>
               </ul>
-            </td>
-          </tr>
-        </table>
+            </div>
+          </div>
+        </div>
     </div>
   </div>
 </template>

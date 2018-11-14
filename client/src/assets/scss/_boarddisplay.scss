@@ -1,15 +1,23 @@
 @import 'settings.scss';
 
 .boarddisplay {
-    &__messagelist {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-        & li {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
+    &__container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        color: $dark-grey;
+    }
+    &__item {
+        flex: 1 0 300px;
+        background: $clouds;
+        margin: 2px;
+    }
+    &__item-name {
+        padding: 10px;
+        background-color: $silver;
+    }
+    &__item-content {
+        padding: 10px;
     }
 
 }
